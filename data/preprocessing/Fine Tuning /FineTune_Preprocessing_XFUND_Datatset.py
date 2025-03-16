@@ -17,10 +17,11 @@ LANGUAGES = ["ja", "it", "pt", "zh", "de", "fr", "es"]
 
 LABEL_MAPPING = {
     "question": 1, # Questions in the form 
-    "answer": 2,  # Answers corresponding to the questions
+    "answer": 2, # Answers corresponding to the questions
     "header": 3, # Section headers
     "other": 0 # Any other text that doesn't fit the above categories
 }
+
 
 def load_annotations(json_path):
     ''' 
@@ -55,7 +56,6 @@ def load_annotations(json_path):
         except json.JSONDecodeError as e: # Handle JSON parsing errors
             print(f"Error loading JSON file {json_path}: {e}.") # Print specific error message
             return None
-
 
 
 def convert_dataset(lang, dataset_type):
