@@ -1,5 +1,6 @@
 from transformers import LiltPreTrainedModel, LiltModel
 from transformers.modeling_outputs import MaskedLMOutput
+from transformers.activations import gelu 
 import torch.nn as nn 
 import torch 
 
@@ -11,19 +12,19 @@ class LiltLMHead(nn.Module):
     def __init__(self, config):
         super().__init__()
 
-        self.mapping_layer = nn.Sequential(
-            nn.Linear(config.hidden_size, config.hidden_size),
-            nn.GELU(),
-            nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
-
-        )
+        self.mapping_layer = nn.Linear(config.hidden_size, config.hidden_size)
+        self.norm_layer = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size)
+
         # bias for output tokens. 
         self.bias = nn.Parameter(torch.zeros(config.vocab_size))
         self.lm_head.bias = self.bias
 
     def forward(self, output_vectors, **kwargs):
         out = self.mapping_layer(output_vectors)
+        out = gelu(out)
+        out = self.norm_layer(out)
+        
         out = self.lm_head(out)
         return out
 
