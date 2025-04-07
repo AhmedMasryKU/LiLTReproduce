@@ -8,7 +8,7 @@ def main():
     # Argument parser
     parser = argparse.ArgumentParser(description='Pretrain LiLT with MLM')
     parser.add_argument('--train-data', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_data", help='Path to training dataset')
-    parser.add_argument('--output-dir', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_checkpoints/try_1_mlm_detach", help='Output Path')
+    parser.add_argument('--output-dir', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_checkpoints/try_2_mlm_detach", help='Output Path')
     parser.add_argument('--num-train-epochs', type=int, default=5, help='Number of training epochs')
     parser.add_argument('--batch-size', type=int, default=128, help='Per-device batch size')
     parser.add_argument('--num-workers', type=int, default=16, help='Dataloader worker threads')

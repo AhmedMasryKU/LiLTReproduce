@@ -2,13 +2,13 @@ import argparse
 import os
 from transformers import AutoTokenizer, TrainingArguments, Trainer
 from data.pretraining.idl_dataset import IDLDataset, IDLDatasetNpy
-from models.lilt_for_masked_lm import LiltForMaskedLM
+from models.lilt_two_tower_for_masked_lm import LiltTwoTowerForMaskedLM
 
 def main():
     # Argument parser
     parser = argparse.ArgumentParser(description='Pretrain LiLT with MLM')
     parser.add_argument('--train-data', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_data", help='Path to training dataset')
-    parser.add_argument('--output-dir', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_checkpoints/try_2_mlm", help='Output Path')
+    parser.add_argument('--output-dir', type=str, default="/home/masry20/projects/def-enamul/masry20/lilt_tmp_checkpoints/try_2_mlm_two_tower", help='Output Path')
     parser.add_argument('--num-train-epochs', type=int, default=5, help='Number of training epochs')
     parser.add_argument('--batch-size', type=int, default=128, help='Per-device batch size')
     parser.add_argument('--num-workers', type=int, default=16, help='Dataloader worker threads')
@@ -17,12 +17,12 @@ def main():
     parser.add_argument('--warmup-ratio', type=int, default=0.1, help='Warmup Ratio')
     #parser.add_argument('--checkpoint-steps', type=int, default=1000, help='Checkpoint saving steps')
     parser.add_argument('--accumulate-grad-batches', type=int, default=1, help='Gradient accumulation steps')
-    parser.add_argument('--checkpoint-path', type=str, default="ahmed-masry/lilt-roberta-en-base-init", help='Model checkpoint path')
+    parser.add_argument('--checkpoint-path', type=str, default="ahmed-masry/lilt-two-tower-base", help='Model checkpoint path')
     args = parser.parse_args()
 
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint_path, token=os.environ['HF_TOKEN'])
-    model = LiltForMaskedLM.from_pretrained(args.checkpoint_path, token=os.environ['HF_TOKEN'])
+    model = LiltTwoTowerForMaskedLM.from_pretrained(args.checkpoint_path, token=os.environ['HF_TOKEN'])
 
     # Load dataset
     train_dataset = IDLDatasetNpy(args.train_data, tokenizer=tokenizer)

@@ -1,47 +1,17 @@
-from transformers import LiltPreTrainedModel
-from .lilt_model import LiltModel
-from transformers.modeling_outputs import MaskedLMOutput
-from transformers.activations import gelu 
-import torch.nn as nn 
-import torch 
-import math
+from .lilt_two_tower_model import LiltTwoTowerModel
+from .lilt_for_masked_lm import LiltLMHead
+from transformers.models.roberta.modeling_roberta import RobertaPreTrainedModel
 from typing import Optional, Union, Tuple
+import torch 
+import torch.nn as nn
+from transformers.modeling_outputs import MaskedLMOutput
 
-
-class LiltLMHead(nn.Module):
-    """LiLT Head for masked language modeling."""
-
-    def __init__(self, config):
-        super().__init__()
-
-        self.mapping_layer = nn.Linear(config.hidden_size, config.hidden_size)
-        self.norm_layer = nn.LayerNorm(config.hidden_size, eps=config.layer_norm_eps)
-        self.lm_head = nn.Linear(config.hidden_size, config.vocab_size)
-
-        # bias for output tokens. 
-        self.bias = nn.Parameter(torch.zeros(config.vocab_size))
-        self.lm_head.bias = self.bias
-
-    def forward(self, output_vectors, **kwargs):
-        out = self.mapping_layer(output_vectors)
-        out = gelu(out)
-        out = self.norm_layer(out)
-        
-        out = self.lm_head(out)
-        return out
-
-    def _tie_weights(self):
-        if self.lm_head.bias.device.type == "meta":
-            self.lm_head.bias = self.bias
-        else:
-            self.bias = self.lm_head.bias
-
-class LiltForMaskedLM(LiltPreTrainedModel):
+class LiltTwoTowerForMaskedLM(RobertaPreTrainedModel):
 
     def __init__(self, config):
         super().__init__(config)
 
-        self.lilt = LiltModel(config, add_pooling_layer=False)
+        self.lilt = LiltTwoTowerModel(config, add_pooling_layer=False)
         self.lm_head = LiltLMHead(config)
 
         # Initialize weights
@@ -52,6 +22,12 @@ class LiltForMaskedLM(LiltPreTrainedModel):
 
     def set_output_embeddings(self, new_embeddings):
         self.lm_head.lm_head = new_embeddings
+
+    def get_input_embeddings(self):
+        return self.lilt.embeddings.word_embeddings
+    
+    def set_input_embeddings(self, value):
+        self.lilt.embeddings.word_embeddings = value
 
     def forward(
         self,

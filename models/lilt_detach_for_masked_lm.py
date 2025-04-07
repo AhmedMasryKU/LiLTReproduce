@@ -1,4 +1,5 @@
 from transformers import LiltPreTrainedModel, LiltModel
+# from .lilt_model import LiltModel
 from transformers.modeling_outputs import MaskedLMOutput
 from transformers.activations import gelu 
 import torch.nn as nn 
@@ -49,12 +50,14 @@ def new_forward(
                 attention_scores = attention_scores + relative_position_scores_query + relative_position_scores_key
 
         tmp_attention_scores = attention_scores / math.sqrt(self.attention_head_size)
-        tmp_layout_attention_scores = layout_attention_scores / math.sqrt(
+        tmp_layout_attention_scores = layout_attention_scores/ math.sqrt(
             self.attention_head_size // self.channel_shrink_ratio
         )
         # BiACM Module. 
+        # print("tmp_attention_scores", tmp_attention_scores)
+        # print("tmp_layout_attention_scores", tmp_layout_attention_scores)
         attention_scores = tmp_attention_scores + tmp_layout_attention_scores
-        layout_attention_scores = tmp_layout_attention_scores + tmp_attention_scores.detach() # Detach the text scores. 
+        layout_attention_scores = tmp_layout_attention_scores + tmp_attention_scores.detach()
 
         if attention_mask is not None:
             # Apply the attention mask is (precomputed for all layers in BertModel forward() function)
@@ -76,7 +79,6 @@ def new_forward(
         layout_context_layer = layout_context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = layout_context_layer.size()[:-2] + (self.all_head_size // self.channel_shrink_ratio,)
         layout_context_layer = layout_context_layer.view(*new_context_layer_shape)
-
         if attention_mask is not None:
             # Apply the attention mask is (precomputed for all layers in RobertaModel forward() function)
             attention_scores = attention_scores + attention_mask
@@ -181,10 +183,10 @@ class LiltDetachForMaskedLM(LiltPreTrainedModel):
             inputs_embeds=inputs_embeds,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
-            return_dict=return_dict,
+            return_dict=True,
         )
 
-        sequence_output = outputs[0]
+        sequence_output = outputs.last_hidden_state
         logits = self.lm_head(sequence_output)
 
         masked_lm_loss = None

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=def-enamul
 #SBATCH --ntasks-per-node=16
-#SBATCH --time=11:50:00
+#SBATCH --time=23:50:00
 #SBATCH --mem=256G
 #SBATCH --partition=debug 
 #SBATCH --gres=gpu:h100:1
@@ -22,4 +22,4 @@ export HF_TOKEN=
 # tar -xf extracted_data.tar 
 
 cd /home/masry20/projects/def-enamul/masry20/LiLTReproduce/
-python pretrain_lilt_mlm.py
+python pretrain_lilt_two_tower_mlm.py

@@ -2,7 +2,7 @@
 #SBATCH --account=def-enamul
 #SBATCH --ntasks-per-node=16
 #SBATCH --time=11:50:00
-#SBATCH --mem=128G
+#SBATCH --mem=256G
 #SBATCH --partition=debug 
 #SBATCH --gres=gpu:h100:1
 #SBATCH --output=/home/masry20/projects/def-enamul/masry20/LiLTReproduce/jobs_output/%x-%j.out
