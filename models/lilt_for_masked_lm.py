@@ -1,5 +1,5 @@
-from transformers import LiltPreTrainedModel
-from .lilt_model import LiltModel
+from transformers import RobertaPreTrainedModel
+from .lilt_model import LiLTModel
 from transformers.modeling_outputs import MaskedLMOutput
 from transformers.activations import gelu 
 import torch.nn as nn 
@@ -36,12 +36,14 @@ class LiltLMHead(nn.Module):
         else:
             self.bias = self.lm_head.bias
 
-class LiltForMaskedLM(LiltPreTrainedModel):
+class LiltForMaskedLM(RobertaPreTrainedModel):
+    
+    _no_split_modules = []
 
     def __init__(self, config):
         super().__init__(config)
 
-        self.lilt = LiltModel(config, add_pooling_layer=False)
+        self.lilt = LiLTModel(config, add_pooling_layer=False)
         self.lm_head = LiltLMHead(config)
 
         # Initialize weights
@@ -52,6 +54,12 @@ class LiltForMaskedLM(LiltPreTrainedModel):
 
     def set_output_embeddings(self, new_embeddings):
         self.lm_head.lm_head = new_embeddings
+
+    def get_input_embeddings(self):
+        return self.lilt.embeddings.word_embeddings
+
+    def set_input_embeddings(self, value):
+        self.lilt.embeddings.word_embeddings = value
 
     def forward(
         self,

@@ -199,7 +199,8 @@ class LiLTSelfAttention(nn.Module):
         layout_attention_scores_before_biacm = layout_attention_scores / math.sqrt(self.attention_head_size // self.config.channel_shrink_ratio)
         # Add Acores together!
         attention_scores = attention_scores_before_biacm + layout_attention_scores_before_biacm
-        layout_attention_scores = attention_scores_before_biacm + layout_attention_scores_before_biacm
+        # Apply detach operation here.
+        layout_attention_scores = attention_scores_before_biacm.detach() + layout_attention_scores_before_biacm
 
         if attention_mask is not None:
             # Apply the attention mask is (precomputed for all layers in RobertaModel forward() function)
@@ -441,7 +442,7 @@ class LiLTEncoder(nn.Module):
         )
     
 
-# Copied from RobertaModel and then modified the relevant layers to become LiLT
+    # Copied from RobertaModel and then modified the relevant layers to become LiLT
 class LiLTModel(RobertaPreTrainedModel):
 
     _no_split_modules = []
