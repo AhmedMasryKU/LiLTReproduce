@@ -5,7 +5,8 @@ from typing import Optional, Union, Tuple # Import type hints
 import torch # PyTorch library
 import torch.nn as nn # Import PyTorch neural network module for building custom deep learning layers and mdels
 from transformers.modeling_outputs import TokenClassifierOutput # Import the output class for token classification
-from transformers import LiltPreTrainedModel, LiltModel # Import the Lilt core model and its pre-trained version (weights)
+from transformers import RobertaPreTrainedModel # Import the pre-trained model class for Roberta
+from .lilt_model import LiLTModel # Import the base LiLT model class
 
 # Define a token classification head for LiLT model
 class TokenClassificationHead(nn.Module):
@@ -46,7 +47,7 @@ class TokenClassificationHead(nn.Module):
 
 
 # Define the LiLT model for token classification by extending the pre-trained LiLT model
-class LiLTForTokenClassification(LiltPreTrainedModel):
+class LiLTForTokenClassification(RobertaPreTrainedModel):
     def __init__(self, config):
         """
         Initializes the LiLT model for token classification
@@ -56,7 +57,7 @@ class LiLTForTokenClassification(LiltPreTrainedModel):
         """
         super().__init__(config)
         # Initialize the base LiLT model without the pooling layer
-        self.lilt = LiltModel(config, add_pooling_layer=False)
+        self.lilt = LiLTModel(config, add_pooling_layer=False)
         # Initialize the token classification head
         self.token_classifier_head = TokenClassificationHead(config)
         # Run post-initialization steps defined in the parent class (weight initialization)
