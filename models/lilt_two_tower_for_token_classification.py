@@ -6,47 +6,10 @@ import torch.nn as nn # Import PyTorch neural network module for building custom
 from transformers.modeling_outputs import TokenClassifierOutput # Import the output class for token classification
 from transformers import RobertaPreTrainedModel # Import the pre-trained model class for Roberta
 from .lilt_two_tower_model import LiltTwoTowerModel # Import the custom LiLT model class
-
-# Define a token classification head for LiLT model
-class TokenClassificationHead(nn.Module):
-    def __init__(self, config):
-        """
-        Initializes the token classification head
-
-        Args:
-            config: Model configuration containing parameters like dropout rates,
-                    hidden size, and number of labels
-        """
-        super().__init__() # There is no need to call the parent class constructor here as nn.Module does not have any specific initialization (config)
-
-        # Choose the classifier dropout from config, fallback to hidden dropout if not set
-        classifier_dropout = config.classifier_dropout if config.classifier_dropout is not None else config.hidden_dropout_prob
-        # Initialize dropout layer with the determined dropout probability
-        self.dropout = nn.Dropout(classifier_dropout)
-
-        # Define a linear layer to project hidden states to the number of labels
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
-
-    def forward(self, features, **kwargs):
-        """
-        Forward pass for the token classification head
-
-        Args:
-            features: Input features (e.g., hidden states) from the base model
-            **kwargs: Additional arguments (not used in this head)
-
-        Returns:
-            logits: The output logits for each token
-        """
-        # Apply dropout to the features to prevent overfitting
-        x = self.dropout(features)
-        # Apply the linear classifier to obtain logits for each label
-        logits = self.classifier(x)
-        return logits
-
+from .lilt_for_token_classification import TokenClassificationHead # Import the token classification head class
 
 # Define the LiLT model for token classification by extending the pre-trained LiLT model
-class LiLTForTokenClassification(RobertaPreTrainedModel):
+class LiltTwoTowerForTokenClassification(RobertaPreTrainedModel):
     def __init__(self, config):
         """
         Initializes the LiLT model for token classification
