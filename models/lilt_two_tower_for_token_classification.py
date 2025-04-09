@@ -5,8 +5,8 @@ import torch # PyTorch library
 import torch.nn as nn # Import PyTorch neural network module for building custom deep learning layers and mdels
 from transformers.modeling_outputs import TokenClassifierOutput # Import the output class for token classification
 from transformers import RobertaPreTrainedModel # Import the pre-trained model class for Roberta
-from .lilt_two_tower_model import LiltTwoTowerModel # Import the custom LiLT model class
-from .lilt_for_token_classification import TokenClassificationHead # Import the token classification head class
+from lilt_two_tower_model import LiltTwoTowerModel # Import the custom LiLT model class
+from lilt_for_token_classification import TokenClassificationHead # Import the token classification head class
 
 # Define the LiLT model for token classification by extending the pre-trained LiLT model
 class LiltTwoTowerForTokenClassification(RobertaPreTrainedModel):
