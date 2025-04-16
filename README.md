@@ -53,5 +53,5 @@ Check out our pretraining scripts in the "scripts" folder. In order to run them,
 We have added a requirements.txt file to install the required dependencies in your conda or virtual environment. 
 
 # Finetuning 
-You can run onr finetuning notebooks: fine-tuning_hugging_face and fine-tuning_ablation_study on colab. 
+You can run onr finetuning notebooks: fine-tuning_hugging_face and fine-tuning_ablation_study on colab. **The colab notebooks may render in github. You should either download them locally or open them in Colab!**
 But you also need access to the datasets which we shae in this google drive folder: https://drive.google.com/drive/folders/1nbHe-kmNmh7gSfTaLLqx7AzzyNNFxu0U
