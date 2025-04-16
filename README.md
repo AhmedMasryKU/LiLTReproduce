@@ -46,8 +46,6 @@ LiLTReproduce/
 │   ├── pretrain_lilt_detach_mlm.sh
 │   ├── pretrain_lilt_mlm_two_tower.sh
 │   └── process_idl_data.sh
-└── trainers/
-    └── Fine-Tuning/
 ```
 
 # Pretraining 
@@ -56,4 +54,4 @@ We have added a requirements.txt file to install the required dependencies in yo
 
 # Finetuning 
 You can run onr finetuning notebooks: fine-tuning_hugging_face and fine-tuning_ablation_study on colab. 
-
+But you also need access to the datasets which we shae in this google drive folder: https://drive.google.com/drive/folders/1nbHe-kmNmh7gSfTaLLqx7AzzyNNFxu0U
