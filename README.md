@@ -52,6 +52,7 @@ LiLTReproduce/
 
 # Pretraining 
 Check out our pretraining scripts in the "scripts" folder. In order to run them, you will need access to Compute Canada resources. Howver, you can also easily adapt them to your computing cluster!
+We have added a requirements.txt file to install the required dependencies in your conda or virtual environment. 
 
 # Finetuning 
 You can run onr finetuning notebooks: fine-tuning_hugging_face and fine-tuning_ablation_study on colab. 
